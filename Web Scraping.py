@@ -29,7 +29,7 @@ for i in range(1,99):
                 writer = csv.writer(csvfile)
 
                 for name,number in zip(names, number):
-                        agent_name = name.get_text().strip()
+                        agent_name = name.get_ text().strip()
                         agent_number = number.get_text().strip()
 
                         writer.writerow([agent_name, agent_number])
