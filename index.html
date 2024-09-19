@@ -4,12 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Search Bar</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* style is centering the search bar */
+    body, html {
+      margin: 0;
+      height: 100%;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Full viewport height */
+    }
+    .input-group {
+      display: flex; /* Ensures input and button are in a row */
+    }
+    input[type="search"] {
+      padding: 10px;
+      width: 300px; /* Set width as needed */
+      border: 1px solid #ccc; /* Added a border for better visibility */
+      border-radius: 5px; /* Rounded corners */
+    }
+    button {
+      padding: 10px 15px; /* Add some padding */
+      margin-left: 5px; /* Space between input and button */
+    }
+  </style>
 </head>
 <body>
-  <div class="input-group">
-    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-    <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+  <div class="container">
+    <div class="input-group">
+      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+      <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>Search</button>
+    </div>
   </div>
 </body>
 </html>
