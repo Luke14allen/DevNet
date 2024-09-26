@@ -61,24 +61,29 @@
 </head>
 <body>
 <div class="container">
-  <!-- /*anything in action_page.php is run once the form is submitted. (nothing is being run for now)*/-->
+  <!-- /*anything in action_page.php is run once the form is submitted. (nothing is being run for now will try to figure out to make a pdf document when pressed)*/-->
 <form autocomplete="off" action = "/action_page.php">
   <div class="autocomplete" style="width:300px;">
     <input id="name" type="search" placeholder="Search">
   </div>
   <input type="Submit" value="Search" class="button">
 </form>
+<!--this does nothing we will need to change the url and create a table full of the agent info(clickable names download pdf)(hyperlink to a list of the agent's info or a way to get to the table)-->
 <p><a href="https://devnetproject.netlify.app/">Want a list?</a></p>
 </div>
-<!--this does nothing we will need to change the url(hyperlink to a list of the agent's info)-->
 
 <script>
+/*getNames() only works if run in a server*/
+/*getNames();*/
+/*let names = [];/*an array to hold the names*/
+var names = ["John Smith", "Emma Johnson", "Michael Brown", "Sophia Davis", "William Wilson", "Olivia Martinez", "James Taylor", "Ava Anderson", "Benjamin Thomas", "Mia Jackson", "Charlotte White", "Daniel Harris", "Emily Clark", "Alexander Lewis", "Sofia Lee", "Matthew Walker", "Amelia Hall", "Joseph Allen", "Evelyn Young", "David King", "Harper Scott", "Christopher Green", "Abigail Baker", "Andrew Nelson", "Elizabeth Carter", "Ryan Mitchell", "Scarlett Perez", "Nicholas Roberts", "Grace Turner", "Samuel Phillips", "Chloe Campbell", "Jonathan Parker", "Zoey Evans", "Christopher Edwards", "Penelope Collins", "Tyler Stewart", "Audrey Sanchez", "Brandon Morris", "Claire Rogers", "Nathan Reed", "Skylar Cook", "Isaac Morgan", "Paisley Bell", "Luke Murphy", "Hannah Bailey", "Owen Rivera", "Nora Cooper", "Gabriel Richardson", "Lily Cox", "Caleb Howard", "Layla Ward", "Julian Torres", "Zoe Peterson", "Connor Gray", "Madelyn Ramirez", "Lincoln James", "Aubrey Watson", "Cameron Brooks", "Autumn Kelly", "Landon Sanders", "Bella Price", "Jeremiah Bennett", "Savannah Wood", "Easton Barnes", "Arianna Ross", "Robert Henderson", "Valentina Coleman", "Axel Jenkins", "Willow Perry", "Grayson Powell", "Ruby Long", "Leo Butler", "Ivy Simmons", "Hudson Foster", "Emilia Washington", "Ezra Gonzales", "Stella Bryant", "Luca Alexander", "Nova Russell", "Kai Griffin", "Delilah Diaz", "Silas Hayes", "Gianna Myers", "Levi Ford", "Isabelle Hamilton", "Asher Graham", "Naomi Sullivan", "Elias Wallace", "Athena Woods", "Harrison West", "Eden Cole", "Nolan Hawkins", "Zuri Snyder", "Felix Cunningham", "Tommy Mcroskey", "Atlas Reeves", "Mila Burns", "Atticus Gordon", "Elliana Watkins", "River Nichols", "Aurora Olson"]
+
 function autocomplete(inp, arr){
   /*inp is the text field element and arr is the possible names*/
   var currentFocus;
   /*when someone writes in the text field it executes a function*/
   inp.addEventListener("input", function(e){
-    var b, c, j, val = this.value;
+    var b, c, i, val = this.value;
     /*closes already opened lists*/
     closeAllLists();
     if (!val){return false;}
@@ -131,9 +136,30 @@ document.addEventListener("click", function (e){
   closeAllLists(e.target);
 })
 }
-/*list of all names from the web scraping*/
-var names = ["John Smith", "Emma Johnson", "Michael Brown", "Sophia Davis", "William Wilson", "Olivia Martinez", "James Taylor", "Ava Anderson", "Benjamin Thomas", "Mia Jackson", "Charlotte White", "Daniel Harris", "Emily Clark", "Alexander Lewis", "Sofia Lee", "Matthew Walker", "Amelia Hall", "Joseph Allen", "Evelyn Young", "David King", "Harper Scott", "Christopher Green", "Abigail Baker", "Andrew Nelson", "Elizabeth Carter", "Ryan Mitchell", "Scarlett Perez", "Nicholas Roberts", "Grace Turner", "Samuel Phillips", "Chloe Campbell", "Jonathan Parker", "Zoey Evans", "Christopher Edwards", "Penelope Collins", "Tyler Stewart", "Audrey Sanchez", "Brandon Morris", "Claire Rogers", "Nathan Reed", "Skylar Cook", "Isaac Morgan", "Paisley Bell", "Luke Murphy", "Hannah Bailey", "Owen Rivera", "Nora Cooper", "Gabriel Richardson", "Lily Cox", "Caleb Howard", "Layla Ward", "Julian Torres", "Zoe Peterson", "Connor Gray", "Madelyn Ramirez", "Lincoln James", "Aubrey Watson", "Cameron Brooks", "Autumn Kelly", "Landon Sanders", "Bella Price", "Jeremiah Bennett", "Savannah Wood", "Easton Barnes", "Arianna Ross", "Robert Henderson", "Valentina Coleman", "Axel Jenkins", "Willow Perry", "Grayson Powell", "Ruby Long", "Leo Butler", "Ivy Simmons", "Hudson Foster", "Emilia Washington", "Ezra Gonzales", "Stella Bryant", "Luca Alexander", "Nova Russell", "Kai Griffin", "Delilah Diaz", "Silas Hayes", "Gianna Myers", "Levi Ford", "Isabelle Hamilton", "Asher Graham", "Naomi Sullivan", "Elias Wallace", "Athena Woods", "Harrison West", "Eden Cole", "Nolan Hawkins", "Zuri Snyder", "Felix Cunningham", "Tommy Mcroskey", "Atlas Reeves", "Mila Burns", "Atticus Gordon", "Elliana Watkins", "River Nichols", "Aurora Olson"]
-/*calls the auto complete function with the input from the text box*/
+/*this reads the csv and gets the names of the agents and puts it into a list used by the other functions*/
+function getNames(){
+  /*reads the csv*/
+  fetch('realtors.csv')
+    /*takes in response and turns it into a string*/
+    .then(response => response.text())
+    /*csvText is a string created from the function above*/
+    .then(csvText =>{
+      const rows =csvText.split('\n');/*splits the csv by rows*/
+      
+
+      rows.forEach((row,index) => {
+        if (index == 0) return; /*skips the first row*/
+        const columns = row.split(','); /*splits the row into columns*/
+        const name = columns[0];
+        
+        if (name){/*checks if there is a name*/
+          names.push(name); /*adds the name into the array*/
+        }
+      })
+    })
+}
+
+/*calls the auto complete function with the input from the text box and the names array*/
 autocomplete(document.getElementById("name"), names);
 </script>
 </body>
