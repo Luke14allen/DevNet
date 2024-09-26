@@ -1,4 +1,32 @@
+/* navbar.css */
 .navbar {
-background: linear-gradient(to right,#662D8C )
-
+    background-image: linear-gradient(to right,#662D8C, #614385,#A890FE);
+    overflow: hidden; /* Clear floats */
 }
+
+.navbar ul {
+    list-style-type: none; /* Remove bullets */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    float: left; /* Align items horizontally */
+}
+
+.navbar a {
+    display: block; /* Make links block elements */
+    color: white; /* White text */
+    text-align: center; /* Center text */
+    padding: 14px 16px; /* Padding around links */
+    text-decoration: none; /* Remove underline */
+}
+
+.navbar a:hover {
+    background-color: #ddd; /* Light background on hover */
+    color: black; /* Dark text on hover */
+}
+.active {
+    background-color: #451192;
+    color: white;
+  }
