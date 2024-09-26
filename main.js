@@ -87,21 +87,7 @@ function generatePDF(){
   const {jsPDF} = window.jspdf;
   const doc = new jsPDF();
 
-  fetch('realtors.csv')
-    /*takes in response and turns it into a string*/
-    .then(response => response.text())
-    /*csvText is a string created from the function above*/
-    .then(csvText =>{
-      const rows =csvText.split('\n');/*splits the csv by rows*/
-      
-
-      rows.forEach((row,index) => {
-        if (index == 0) return; /*skips the first row*/
-        const columns = row.split(','); /*splits the row into columns*/
-        const name = columns[0];
-      })
-    })
-  doc.text(name[0], 10, 10);
+  doc.text('hello world', 10, 10);
 
 
   doc.save('agent_info.pdf');
