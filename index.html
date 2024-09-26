@@ -24,16 +24,16 @@
 
 <div class="container">
   <!-- /*anything in action_page.php is run once the form is submitted. (nothing is being run for now will try to figure out to make a pdf document when pressed)*/-->
-<form autocomplete="off" action = "/action_page.php">
+<form autocomplete="off" onsubmit="generatePDF()">
         <div class="autocomplete" style="width:300px;">
           <input id="name" type="search" placeholder="Search">
         </div>
-      <input type="Submit" value="Search" class="button">
+      <input type="Submit" value="Search" class="button" id="download">
   </form>
 <!--this does nothing we will need to change the url and create a table full of the agent info(clickable names download pdf)(hyperlink to a list of the agent's info or a way to get to the table)-->
 <p><a href="https://devnetproject.netlify.app/">Want a list?</a></p>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src = "main.js"></script>
 </body>
 </html>
