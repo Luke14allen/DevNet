@@ -1,6 +1,6 @@
 let names = [];/*an array to hold the names*/
 
-let agents = [];
+let agents = [];// array to hold agent's information
 
 /*this reads the csv and gets the names of the agents and puts it into a list used by the other functions*/
 function getNames(){
@@ -38,7 +38,7 @@ function getNames(){
 autocomplete(document.getElementById("name"), names);
 
 //pdf generator
-async function generatePDF(event){
+function generatePDF(event){
   event.preventDefault(); // prevents the website from refreshing
 
   const searchvalue = document.getElementById('name').value.trim().toLowerCase(); // gets the information from the search bar
@@ -99,19 +99,6 @@ function autocomplete(inp, arr){
       }
     }
   })
-/*makes an item "active"*/
-function addActive(x){
-  if (!x) return false;
-  removeACtive(x);
-  if (currentFocus >= x.length()) currentFocus = 0;
-  if (currentFocus < 0) currentFocus = (x.length -1);
-}
-/*removes "active" items*/
-function removeActive(x){
-  for (var i=0; i < x.length; i++) {
-    x[i].classList.remove("autocomplete-active');")
-  }
-}
 /*closes the list when called*/
 function closeAllLists(elmnt){
   var x = document.getElementsByClassName("autocomplete-items");
