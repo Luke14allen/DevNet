@@ -113,3 +113,8 @@ document.addEventListener("click", function (e){
   closeAllLists(e.target);
 })
 }
+
+//function to create a table
+function populateAgentTable(){
+  
+}
