@@ -1,7 +1,72 @@
-/*getNames() only works if run in a server*/
+let names = [];/*an array to hold the names*/
+
+let agents = [];// array to hold agent's information
+
+/*this reads the csv and gets the names of the agents and puts it into a list used by the other functions*/
+function getNames(){
+  /*reads the csv*/
+  fetch('realtors.csv')
+    /*takes in response and turns it into a string*/
+    .then(response => response.text())
+    /*csvText is a string created from the function above*/
+    .then(csvText =>{
+      const rows =csvText.split('\n');/*splits the csv by rows*/
+      
+
+      rows.forEach((row,index) => {
+        if (index == 0) return; /*skips the first row*/
+        const columns = row.split(','); /*splits the row into columns*/
+        const name = columns[0];
+        const phone = columns[1];
+        const spec = columns[2];
+        const exper = columns[3];
+        
+        if (name){/*checks if there is a name*/
+          names.push(name); /*adds the name into the array*/
+          agents.push({
+            name,
+            phone,
+            spec,
+            exper,
+          })/* adds agent info into the array */
+        }
+      })
+    })
+}
+
+/*calls the auto complete function with the input from the text box and the names array*/
+autocomplete(document.getElementById("name"), names);
+
+//pdf generator
+function generatePDF(event){
+  event.preventDefault(); // prevents the website from refreshing
+
+  const searchvalue = document.getElementById('name').value.trim().toLowerCase(); // gets the information from the search bar
+
+  const matchedAgent = agents.filter(agent => agent.name.toLowerCase().includes(searchvalue)); //finds the agent from the array
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();// creating pdf
+
+  doc.setFontSize(16);
+  doc.text('Agent Information', 10, 10);// title of pdf
+  doc.setFontSize(12);
+
+  //inputs the agent's information into pdf
+  matchedAgent.forEach((agent,index) => {
+    const yOffset = 30 + (index * 40);
+
+    doc.text(`Name: ${agent.name}`, 10, yOffset);
+    doc.text(`Phone: ${agent.phone}`, 10, yOffset + 10);
+    doc.text(`Specialization: ${agent.spec}`, 10, yOffset + 20);
+    doc.text(`Experience: ${agent.exper}`, 10, yOffset + 30);
+  })
+  //sets the pdf's name to "agentname"_info
+  doc.save(`${matchedAgent[0].name}_info.pdf`);//downloads pdf
+}
+
+//initializes names from csv
 getNames();
-let names = []; /*an array to hold the names*/
-// var names = ["John Smith", "Emma Johnson", "Michael Brown", "Sophia Davis", "William Wilson", "Olivia Martinez", "James Taylor", "Ava Anderson", "Benjamin Thomas", "Mia Jackson", "Charlotte White", "Daniel Harris", "Emily Clark", "Alexander Lewis", "Sofia Lee", "Matthew Walker", "Amelia Hall", "Joseph Allen", "Evelyn Young", "David King", "Harper Scott", "Christopher Green", "Abigail Baker", "Andrew Nelson", "Elizabeth Carter", "Ryan Mitchell", "Scarlett Perez", "Nicholas Roberts", "Grace Turner", "Samuel Phillips", "Chloe Campbell", "Jonathan Parker", "Zoey Evans", "Christopher Edwards", "Penelope Collins", "Tyler Stewart", "Audrey Sanchez", "Brandon Morris", "Claire Rogers", "Nathan Reed", "Skylar Cook", "Isaac Morgan", "Paisley Bell", "Luke Murphy", "Hannah Bailey", "Owen Rivera", "Nora Cooper", "Gabriel Richardson", "Lily Cox", "Caleb Howard", "Layla Ward", "Julian Torres", "Zoe Peterson", "Connor Gray", "Madelyn Ramirez", "Lincoln James", "Aubrey Watson", "Cameron Brooks", "Autumn Kelly", "Landon Sanders", "Bella Price", "Jeremiah Bennett", "Savannah Wood", "Easton Barnes", "Arianna Ross", "Robert Henderson", "Valentina Coleman", "Axel Jenkins", "Willow Perry", "Grayson Powell", "Ruby Long", "Leo Butler", "Ivy Simmons", "Hudson Foster", "Emilia Washington", "Ezra Gonzales", "Stella Bryant", "Luca Alexander", "Nova Russell", "Kai Griffin", "Delilah Diaz", "Silas Hayes", "Gianna Myers", "Levi Ford", "Isabelle Hamilton", "Asher Graham", "Naomi Sullivan", "Elias Wallace", "Athena Woods", "Harrison West", "Eden Cole", "Nolan Hawkins", "Zuri Snyder", "Felix Cunningham", "Tommy Mcroskey", "Atlas Reeves", "Mila Burns", "Atticus Gordon", "Elliana Watkins", "River Nichols", "Aurora Olson"]
 
 function autocomplete(inp, arr){
   /*inp is the text field element and arr is the possible names*/
@@ -34,19 +99,6 @@ function autocomplete(inp, arr){
       }
     }
   })
-/*makes an item "active"*/
-function addActive(x){
-  if (!x) return false;
-  removeACtive(x);
-  if (currentFocus >= x.length()) currentFocus = 0;
-  if (currentFocus < 0) currentFocus = (x.length -1);
-}
-/*removes "active" items*/
-function removeActive(x){
-  for (var i=0; i < x.length; i++) {
-    x[i].classList.remove("autocomplete-active');")
-  }
-}
 /*closes the list when called*/
 function closeAllLists(elmnt){
   var x = document.getElementsByClassName("autocomplete-items");
@@ -61,28 +113,8 @@ document.addEventListener("click", function (e){
   closeAllLists(e.target);
 })
 }
-/*this reads the csv and gets the names of the agents and puts it into a list used by the other functions*/
-function getNames(){
-  /*reads the csv*/
-  fetch('realtors.csv')
-    /*takes in response and turns it into a string*/
-    .then(response => response.text())
-    /*csvText is a string created from the function above*/
-    .then(csvText =>{
-      const rows =csvText.split('\n');/*splits the csv by rows*/
-      
 
-      rows.forEach((row,index) => {
-        if (index == 0) return; /*skips the first row*/
-        const columns = row.split(','); /*splits the row into columns*/
-        const name = columns[0];
-        
-        if (name){/*checks if there is a name*/
-          names.push(name); /*adds the name into the array*/
-        }
-      })
-    })
+//function to create a table
+function populateAgentTable(){
+  
 }
-
-/*calls the auto complete function with the input from the text box and the names array*/
-autocomplete(document.getElementById("name"), names);
