@@ -1,0 +1,50 @@
+/* Basic table styling */
+table {
+    width: 100%; /* Make the table full width */
+    border-collapse: collapse; /* Remove space between cells */
+}
+
+/* Table headers */
+th {
+    background-color: #f2f2f2; /* Light gray background for headers */
+    color: black; /* Text color */
+    padding: 12px; /* Padding inside the header cells */
+    text-align: left; /* Align text to the left */
+    border-bottom: 2px solid #ddd; /* Border at the bottom of the header */
+}
+
+/* Table data (cells) */
+td {
+    padding: 12px; /* Padding inside the table cells */
+    border-bottom: 1px solid #ddd; /* Border between table rows */
+}
+
+/* Zebra striping for rows */
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Light background for every second row */
+}
+
+/* Hover effect for rows */
+tr:hover {
+    background-color: #f1f1f1; /* Change background on hover */
+}
+
+/* Center-align text for specific columns */
+td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+    text-align: center; /* Center align specific columns */
+}
+
+/* Make clickable links in the name column stand out */
+a {
+    color: #0066cc; /* Blue color for links */
+    text-decoration: none; /* Remove underline from links */
+}
+
+/* Change link color when hovered over */
+a:hover {
+    text-decoration: underline; /* Add underline when hovering */
+}
+h1 {
+    text-align: center; /* This centers the text horizontally */
+    margin-top: 20px; /* Add some space at the top */
+}
