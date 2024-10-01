@@ -5,8 +5,9 @@
 }
 
 .navbar ul {
+    display: flex;
     list-style-type: none;  
-    margin: 0;
+    margin: 10;
     padding: 0;
 }
 
@@ -15,7 +16,7 @@
 }
 
 .navbar a {
-    display: block; /* Make links block elements */
+    display: block; 
     color: white; 
     text-align: center; /* Center text */
     padding: 14px 16px; /* Padding around links */
