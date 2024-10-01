@@ -45,7 +45,7 @@ a:hover {
     text-decoration: underline; /* Add underline when hovering */
 }
 h1 {
-    text-align: left; /* This centers the text horizontally */
+    text-align: center; /* This centers the text horizontally */
     margin-top: 20px; /* Add some space at the top */
 }
 th, td {
