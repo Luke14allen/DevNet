@@ -35,14 +35,22 @@ function getNames(){
 }
 
 /*calls the auto complete function with the input from the text box and the names array*/
-autocomplete(document.getElementById("name"), names);
+//prevents autocomplete to run in list.html
+if (!(window.location.pathname.includes('list.html'))){
+  autocomplete(document.getElementById("name"), names);
+}
 
 //pdf generator
-function generatePDF(event){
+function generatePDF(inp){
   event.preventDefault(); // prevents the website from refreshing
 
-  const searchvalue = document.getElementById('name').value.trim().toLowerCase(); // gets the information from the search bar
-
+  //changes searchvalue based on where the window is run
+  if(window.location.pathname.includes('index.html')){
+    var searchvalue = document.getElementById('name').value.trim().toLowerCase(); // gets the information from the search bar
+  }
+  if(window.location.pathname.includes('list.html')){
+    var searchvalue = inp.trim().toLowerCase();
+  }
   const matchedAgent = agents.filter(agent => agent.name.toLowerCase().includes(searchvalue)); //finds the agent from the array
 
   const { jsPDF } = window.jspdf;
@@ -115,6 +123,31 @@ document.addEventListener("click", function (e){
 }
 
 //function to create a table
-function populateAgentTable(){
-  
+function populateAgentTable() {
+  const tableBody = document.getElementById('agentTable').getElementsByTagName('tbody')[0];
+
+  //loads each agent from csv and adds it to the table
+  //each name is able to be clicked and once clicked it will download the agent's information
+  agents.forEach(agent => {
+      const row = document.createElement('tr');
+
+      const nameCell = document.createElement('td');
+      nameCell.innerHTML = `<a href="#" onclick="generatePDF('${agent.name}')">${agent.name}</a>`;
+      
+      const phoneCell = document.createElement('td');
+      phoneCell.textContent = agent.phone;
+      
+      const specializationCell = document.createElement('td');
+      specializationCell.textContent = agent.spec;
+      
+      const experienceCell = document.createElement('td');
+      experienceCell.textContent = agent.exper;
+
+      row.appendChild(nameCell);
+      row.appendChild(phoneCell);
+      row.appendChild(specializationCell);
+      row.appendChild(experienceCell);
+      tableBody.appendChild(row);
+  });
 }
+window.onload = populateAgentTable;
