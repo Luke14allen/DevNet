@@ -29,13 +29,16 @@ if url_response.status_code == 200:
 
                 # Parse the JSON data
                 realtors = json.loads(realtors_data)
-
+                
+                # Sorts realtors by name alphabeticaly
+                realtors_sorted = sorted(realtors, key=lambda x: x['name'])
+                
                 # Writes to a CSV file
                 with open('realtors.csv', 'w', newline='', encoding='utf-8') as csvfile:
-                    fieldnames = realtors[0].keys()
+                    fieldnames = realtors_sorted[0].keys()
                     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                     writer.writeheader()
-                    for realtor in realtors:
+                    for realtor in realtors_sorted:
                         writer.writerow(realtor)
             except json.JSONDecodeError:
                 print("Error decoding JSON data")
