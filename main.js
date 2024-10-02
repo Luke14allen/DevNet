@@ -55,10 +55,14 @@ function generatePDF(inp) {
   }
   if(window.location.pathname.includes('list.html')){
     var selectedValue = inp;
-    var values = selectedValue.split(",");
+    if(selectedValue.includes(',')){
+      var values = selectedValue.split(",");
   var selectedName = values[0] ? values[0].trim() : null; // Get the name and trim
   var selectedSpec = values[1] ? values[1].trim() : null; // Get the specialization and trim
-    
+    }
+    else{
+      selectedName = selectedValue.trim();
+    }
   }
   // Find the matched agent based on name and specialization
   const matchedAgent = agents.find(agent => 
