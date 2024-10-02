@@ -50,9 +50,8 @@ function generatePDF(inp) {
     let selectedSpec;
   
     // Get the selected value based on the page
-    if (window.location.pathname.includes('index.html')) {
-      selectedValue = document.getElementById('name').value; // Get the input value
-    } else if (window.location.pathname.includes('list.html')) {
+    selectedValue = document.getElementById('name').value; // Get the input value
+    if (window.location.pathname.includes('list.html')) {
       selectedValue = inp; // Use the provided inp parameter
     }
   
