@@ -44,22 +44,23 @@ if (!(window.location.pathname.includes('list.html'))){
 function generatePDF(inp) {
   event.preventDefault(); // prevents the website from refreshing
 
-  // Get the selected value from the input
-  if(window.location.pathname.includes('index.html')){
-  var selectedValue = document.getElementById('name').value; // Get the input value
-
-  // Split the value to get name and specialization
-  var values = selectedValue.split(',');
-  var selectedName = values[0] ? values[0].trim() : null; // Get the name and trim
-  var selectedSpec = values[1] ? values[1].trim() : null; // Get the specialization and trim
-  }
-  if(window.location.pathname.includes('list.html')){
-    var selectedValue = inp;
-    var values = selectedValue.split(",");
-  var selectedName = values[0] ? values[0].trim() : null; // Get the name and trim
-  var selectedSpec = values[1] ? values[1].trim() : null; // Get the specialization and trim
-    
-  }
+    // Initialize selected value
+    let selectedValue;
+    let selectedName;
+    let selectedSpec;
+  
+    // Get the selected value based on the page
+    if (window.location.pathname.includes('index.html')) {
+      selectedValue = document.getElementById('name').value; // Get the input value
+    } else if (window.location.pathname.includes('list.html')) {
+      selectedValue = inp; // Use the provided inp parameter
+    }
+  
+    // Split the value to get name and specialization
+    const values = selectedValue.split(',');
+    selectedName = values[0] ? values[0].trim() : null; // Get the name and trim
+    selectedSpec = values[1] ? values[1].trim() : null; // Get the specialization and trim
+  
   // Find the matched agent based on name and specialization
   const matchedAgent = agents.find(agent => 
     agent.name.toLowerCase() === selectedName.toLowerCase() &&
@@ -136,7 +137,7 @@ function autocomplete(inp, arr){
           // When the user clicks an item, populate the input field
           c.addEventListener("click", function (e) {
             const selectedValue = this.getElementsByTagName("input")[0].value;
-            inp.value = selectedValue;  // puts name (and if there is a specialization) back
+            inp.value = selectedValue;  // puts name and specialization into the bar
             closeAllLists();
           });
 
