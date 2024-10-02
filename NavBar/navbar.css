@@ -1,7 +1,8 @@
 
 .navbar {
-    background-image: linear-gradient(to right,#662D8C, #614385,#A890FE);
+    background-image: linear-gradient(to right, rgb(218, 173, 250));
     overflow: hidden; /* Clear floats */
+    height: flex;
 }
 
 .navbar ul {
