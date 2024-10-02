@@ -48,9 +48,12 @@ function generatePDF(inp) {
     let selectedValue;
     let selectedName;
     let selectedSpec;
-  
+
+    if((inp && inp.includes(',')) || document.getElementById('name').value.includes(',')){
     // Get the selected value based on the page
+    if(!(window.location.pathname.includes('list.html'))){
     selectedValue = document.getElementById('name').value; // Get the input value
+    }
     if (window.location.pathname.includes('list.html')) {
       selectedValue = inp; // Use the provided inp parameter
     }
@@ -61,12 +64,19 @@ function generatePDF(inp) {
     selectedSpec = values[1] ? values[1].trim() : null; // Get the specialization and trim
   
   // Find the matched agent based on name and specialization
-  const matchedAgent = agents.find(agent => 
+  var matchedAgent = agents.find(agent => 
     agent.name.toLowerCase() === selectedName.toLowerCase() &&
     agent.spec.toLowerCase() === selectedSpec.toLowerCase()
   );
-
+    }else{
+      selectedValue = document.getElementById('name').value;
+      
+      var matchedAgent = agents.find(agent =>
+        agent.name.toLowerCase() == selectedValue.toLowerCase()
+      );
+    }
   
+    
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF(); // creating pdf
 
@@ -136,7 +146,12 @@ function autocomplete(inp, arr){
           // When the user clicks an item, populate the input field
           c.addEventListener("click", function (e) {
             const selectedValue = this.getElementsByTagName("input")[0].value;
-            inp.value = selectedValue;  // puts name and specialization into the bar
+            if(nameCount[agent.name.toLowerCase()] > 1){
+            inp.value = selectedValue;  // puts name 
+            }
+            else{
+              inp.value = selectedValue.split(',')[0];
+            }
             closeAllLists();
           });
 
