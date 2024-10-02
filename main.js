@@ -37,41 +37,57 @@ function getNames(){
 /*calls the auto complete function with the input from the text box and the names array*/
 //prevents autocomplete to run in list.html
 if (!(window.location.pathname.includes('list.html'))){
-  autocomplete(document.getElementById("name"), names);
+  autocomplete(document.getElementById("name"), agents);
 }
 
 //pdf generator
-function generatePDF(inp){
+function generatePDF(inp) {
   event.preventDefault(); // prevents the website from refreshing
 
-  //changes searchvalue based on where the window is run
+  // Get the selected value from the input
   if(window.location.pathname.includes('index.html')){
-    var searchvalue = document.getElementById('name').value.trim().toLowerCase(); // gets the information from the search bar
+  var selectedValue = document.getElementById('name').value; // Get the input value
+
+  // Split the value to get name and specialization
+  var values = selectedValue.split(',');
+  var selectedName = values[0] ? values[0].trim() : null; // Get the name and trim
+  var selectedSpec = values[1] ? values[1].trim() : null; // Get the specialization and trim
   }
   if(window.location.pathname.includes('list.html')){
-    var searchvalue = inp.trim().toLowerCase();
+    var selectedValue = inp;
+    if(selectedValue.includes(',')){
+      var values = selectedValue.split(",");
+  var selectedName = values[0] ? values[0].trim() : null; // Get the name and trim
+  var selectedSpec = values[1] ? values[1].trim() : null; // Get the specialization and trim
+    }
+    else{
+      selectedName = selectedValue.trim();
+    }
   }
-  const matchedAgent = agents.filter(agent => agent.name.toLowerCase().includes(searchvalue)); //finds the agent from the array
+  // Find the matched agent based on name and specialization
+  const matchedAgent = agents.find(agent => 
+    agent.name.toLowerCase() === selectedName.toLowerCase() &&
+    agent.spec.toLowerCase() === selectedSpec.toLowerCase()
+  );
 
+  
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();// creating pdf
+  const doc = new jsPDF(); // creating pdf
 
   doc.setFontSize(16);
-  doc.text('Agent Information', 10, 10);// title of pdf
+  doc.text('Agent Information', 10, 10); // title of pdf
   doc.setFontSize(12);
 
-  //inputs the agent's information into pdf
-  matchedAgent.forEach((agent,index) => {
-    const yOffset = 30 + (index * 40);
+  // Inputs the agent's information into pdf
+  doc.text(`Name: ${matchedAgent.name}`, 10, 30);
+  doc.text(`Phone: ${matchedAgent.phone}`, 10, 40);
+  doc.text(`Specialization: ${matchedAgent.spec}`, 10, 50);
+  doc.text(`Experience: ${matchedAgent.exper}`, 10, 60);
 
-    doc.text(`Name: ${agent.name}`, 10, yOffset);
-    doc.text(`Phone: ${agent.phone}`, 10, yOffset + 10);
-    doc.text(`Specialization: ${agent.spec}`, 10, yOffset + 20);
-    doc.text(`Experience: ${agent.exper}`, 10, yOffset + 30);
-  })
-  //sets the pdf's name to "agentname"_info
-  doc.save(`${matchedAgent[0].name}_info.pdf`);//downloads pdf
+  // Sets the pdf's name to "agentname"_info
+  doc.save(`${matchedAgent.name}_info.pdf`); // downloads pdf
 }
+
 
 //initializes names from csv
 getNames();
@@ -91,22 +107,48 @@ function autocomplete(inp, arr){
     b.setAttribute("id", this.id +"autocomplete-list");
     b.setAttribute("class", "autocomplete-items");
     this.parentNode.appendChild(b);
+
+    const nameCount = arr.reduce((acc, agent) => {
+      const agentName = agent.name.toLowerCase();
+      acc[agentName] = (acc[agentName]||0) +1;
+      return acc;
+    }, {});
     /*this checks every name and if it matches the input the letters will be bolded and names show up*/
-    for(i = 0; i < arr.length; i++){
-      if(arr[i].substr(0,val.length).toUpperCase() == val.toUpperCase()){
-        c = document.createElement("DIV");
-        c.innerHTML = "<strong>" + arr[i]. substr(0,val.length) + "</strong>";
-        c.innerHTML += arr[i].substr(val.length);
-        c.innerHTML += "<input type='hidden' value ='" + arr[i] + "'>";
-        /*when name is clicked it puts the full name into the text box then closes the list*/
-        c.addEventListener("click", function(e){
-          inp.value = this.getElementsByTagName("input")[0].value;
-          closeAllLists();
-        })
-        b.appendChild(c);
+    for (i = 0; i < arr.length; i++) {
+      const agent = arr[i];
+
+      if (agent.name) {  // Only proceed if the agent has a name
+        const agentName = agent.name.toLowerCase();
+        const nameMatch = agentName.substr(0, val.length) === val.toLowerCase(); 
+
+        // If the input matches the agent's name (or partial name)
+        if (nameMatch) {
+          c = document.createElement("DIV");
+
+          // Highlight the matched part
+          c.innerHTML = "<strong>" + agent.name.substr(0, val.length) + "</strong>"; 
+          c.innerHTML += agent.name.substr(val.length); 
+
+          // If there are duplicates, also display specialization in the list
+          if (nameCount[agent.name.toLowerCase()] > 1) {
+            c.innerHTML += ` (${agent.spec})`;
+          }
+
+          // Add hidden input to store agent info
+          c.innerHTML += "<input type='hidden' value='" + agent.name + "," + agent.spec + "'>";
+
+          // When the user clicks an item, populate the input field
+          c.addEventListener("click", function (e) {
+            const selectedValue = this.getElementsByTagName("input")[0].value;
+            inp.value = selectedValue;  // puts name (and if there is a specialization) back
+            closeAllLists();
+          });
+
+          b.appendChild(c);
+        }
       }
     }
-  })
+  });
 /*closes the list when called*/
 function closeAllLists(elmnt){
   var x = document.getElementsByClassName("autocomplete-items");
@@ -126,14 +168,24 @@ document.addEventListener("click", function (e){
 function populateAgentTable() {
   const tableBody = document.getElementById('agentTable').getElementsByTagName('tbody')[0];
 
+  //keeps track of name counts
+  const nameCount = {};
   //loads each agent from csv and adds it to the table
   //each name is able to be clicked and once clicked it will download the agent's information
   agents.forEach(agent => {
-      const row = document.createElement('tr');
+    const agentName = agent.name.toLowerCase(); // Normalize name for counting
+    // Count occurrences of each agent name
+    nameCount[agentName] = (nameCount[agentName] || 0) + 1;
 
-      const nameCell = document.createElement('td');
-      nameCell.innerHTML = `<a href="#" onclick="generatePDF('${agent.name}')">${agent.name}</a>`;
-      
+    const row = document.createElement('tr');
+    const nameCell = document.createElement('td');
+
+    // If the name count is more than 1, show specialization next to the name
+    if (nameCount[agentName] > 1) {
+      nameCell.innerHTML = `<a href="#" onclick="generatePDF('${agent.name},${agent.spec}')">${agent.name} (${agent.spec})</a>`;
+    } else {
+      nameCell.innerHTML = `<a href="#" onclick="generatePDF('${agent.name},${agent.spec}')">${agent.name}</a>`;
+    }
       const phoneCell = document.createElement('td');
       phoneCell.textContent = agent.phone;
       
@@ -150,4 +202,6 @@ function populateAgentTable() {
       tableBody.appendChild(row);
   });
 }
+if(window.location.pathname.includes('list.html')){
 window.onload = populateAgentTable;
+}
